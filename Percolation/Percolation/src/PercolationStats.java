@@ -4,10 +4,10 @@ import edu.princeton.cs.algs4.StdStats;
 public class PercolationStats {
     // the number of repeating the computation experiment
     private static final double CONFIDENCE = 1.96;
-    private double mean;
-    private double stddev;
-    private double confidenceLo;
-    private double confidenceHi;
+    private final double mean;
+    private final double stddev;
+    private final double confidenceLo;
+    private final double confidenceHi;
 
     // perform independent trials on an n-by-n grid
     public PercolationStats(int n, int trials) {
@@ -29,11 +29,11 @@ public class PercolationStats {
 
                 // record the result
                 results[i] = (double) grid.numberOfOpenSites() / (n * n);
-                mean = StdStats.mean(results);
-                stddev = StdStats.stddev(results);
-                confidenceLo = mean() - CONFIDENCE * stddev() / Math.sqrt(results.length);
-                confidenceHi = mean() + CONFIDENCE * stddev() / Math.sqrt(results.length);
             }
+            mean = StdStats.mean(results);
+            stddev = StdStats.stddev(results);
+            confidenceLo = mean() - CONFIDENCE * stddev() / Math.sqrt(results.length);
+            confidenceHi = mean() + CONFIDENCE * stddev() / Math.sqrt(results.length);
         }
     }
 

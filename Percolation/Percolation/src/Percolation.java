@@ -6,6 +6,7 @@ public class Percolation {
     private final boolean[] states;
     private final int length;
     private final WeightedQuickUnionUF uf;
+    private final WeightedQuickUnionUF uf1;
     private int numberOfOpenSites;
 
     // creates n-by-n grid, with all sites initially blocked
@@ -16,6 +17,7 @@ public class Percolation {
             throw new IllegalArgumentException("The length of size is illegal!");
         } else {
             uf = new WeightedQuickUnionUF(n * n + 2);
+            uf1 = new WeightedQuickUnionUF(n * n + 1); // a duplicate of uf, only has virtual top site
             states = new boolean[n * n];
             length = n;
             numberOfOpenSites = 0;
@@ -38,6 +40,7 @@ public class Percolation {
             // connect the site in the first row to the virtual top site
             if (row == 1) {
                 uf.union(n, length * length);
+                uf1.union(n, length * length);
             }
 
             // connect the site in the last row to the virtual bottom site
@@ -48,18 +51,22 @@ public class Percolation {
             // connect the site with its surrounding sites
             if (row + 1 <= length && isOpen(row + 1, col)) {
                 uf.union(n, convertCoordinate(row + 1, col));
+                uf1.union(n, convertCoordinate(row + 1, col));
             }
 
             if (row - 1 >= 1 && isOpen(row - 1, col)) {
                 uf.union(n, convertCoordinate(row - 1, col));
+                uf1.union(n, convertCoordinate(row - 1, col));
             }
 
             if (col + 1 <= length && isOpen(row, col + 1)) {
                 uf.union(n, convertCoordinate(row, col + 1));
+                uf1.union(n, convertCoordinate(row, col + 1));
             }
 
             if (col - 1 >= 1 && isOpen(row, col - 1)) {
                 uf.union(n, convertCoordinate(row, col - 1));
+                uf1.union(n, convertCoordinate(row, col - 1));
             }
 
             // updates state and number of open sites
@@ -77,7 +84,7 @@ public class Percolation {
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
         int n = convertCoordinate(row, col);
-        return uf.find(length * length) == uf.find(n);
+        return uf1.find(length * length) == uf1.find(n);
     }
 
     // returns the number of open sites
